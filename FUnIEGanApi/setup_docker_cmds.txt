@@ -1,0 +1,33 @@
+# Use base image that supports Conda
+FROM continuumio/miniconda3:latest
+
+# Set the working directory
+WORKDIR /app
+
+# Copy the requirements file
+COPY requirements.txt .
+
+# Install system dependencies - especially ffmpeg for video saving and display on browsers
+RUN apt-get update && apt-get install -y ffmpeg
+
+# Create a new Conda environment with Python 3.8
+RUN conda create --name funiegan_env python=3.8
+
+# Activate the Conda environment
+RUN echo "conda activate funiegan_env" >> ~/.bashrc
+ENV PATH /opt/conda/envs/funiegan_env/bin:$PATH
+
+# Install dependencies from requirements.txt using both conda and pip
+# Conda will attempt to install packages listed in requirements.txt first
+# pip will handle any packages that Conda couldn't find
+RUN conda install --name funiegan_env --file requirements.txt -c conda-forge || true
+RUN pip install -r requirements.txt
+
+# Copy the application code
+COPY . .
+
+# Expose the port that the FUnIEGAN API
+EXPOSE 8001
+
+# Run Flask API
+CMD ["python", "main.py"]

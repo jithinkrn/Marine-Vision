@@ -1,0 +1,223 @@
+/* body {
+    font-family: Arial, sans-serif;
+    background-image: url("../images/underwater.webp");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+} */
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #000000;  /* Set solid black background */
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;  /* Ensure the background covers the entire viewport */
+    color: #0632f3;  /* Set text color to yellow */
+}
+
+
+h1 {
+    color: #ffffff;
+    font-size: 2em;
+    margin-bottom: 20px;
+}
+
+form {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+    width: 300px;
+    text-align: center;
+}
+
+input[type="file"] {
+    display: block;
+    margin: 20px auto;
+    padding: 10px;
+}
+
+input[type="submit"] {
+    background-color: #007BFF;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+input[type="submit"]:hover {
+    background-color: #0056b3;
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    margin-bottom: 20px;
+}
+
+li {
+    color: #ffffff;
+    margin-bottom: 10px;
+    font-size: 1.2em;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin-top: 20px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+    color: hsl(0, 0%, 100%);
+    margin-top: 30px;
+    font-size: 1.5em;
+}
+
+ /* style for the 2x2 video grid */
+ .video-grid {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr); /* 2 columns */
+    grid-gap: 20px; /* Space between videos */
+    margin: 20px 0;
+}
+
+/* Center the input video */
+.input-video {
+    display: flex;
+    justify-content: center; /* Centers horizontally */
+    margin-bottom: 40px; /* Space between input video and grid */
+}
+
+/* Default video styling */
+.video-container {
+    position: relative;
+    text-align: center;
+}
+
+/* Styling for the best video with a border */
+.best-video {
+    border: 4px solid #f3f306;
+}
+
+/* Annotation for best video */
+.best-video-annotation {
+    position: absolute;
+    bottom: -25px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-weight: bold;
+    color: #f3f306;
+}
+
+/* Annotation for best video */
+.score-annotation {
+    color: #fe9501;
+}
+
+.best-model-summary {
+    font-family: Arial, sans-serif;
+    max-width: 800px;
+    margin: auto;
+    padding: 20px;
+    line-height: 1.6;
+    color: #fbfbfb;  /* Text color */
+}
+
+.best-model-summary h2, 
+.best-model-summary h3 {
+    color: #ffffff;  /* Ensure headers also use the same text color */
+    margin-bottom: 10px;
+}
+
+.best-model-summary p {
+    margin-bottom: 15px;
+}
+
+.score-list {
+    list-style-type: disc;
+    padding-left: 20px;
+}
+
+.score-list li {
+    margin-bottom: 10px;
+}
+
+/* Feedback form-specific styles */
+.feedback-form h2, 
+.feedback-form label {
+    color: black;
+}
+
+/* Optional: Adjust spacing for better layout */
+.feedback-form input[type="radio"] {
+    margin-right: 8px;
+}
+
+.flash-messages {
+    list-style: none;
+    padding: 0;
+    margin: 10px 0;
+}
+
+.flash-success {
+    background-color: #d4edda; /* Light green background */
+    color: #155724; /* Dark green text */
+    border: 1px solid #c3e6cb;
+    padding: 10px;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+.form-container {
+    align-items: center;
+}
+
+.container {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px; /* Space between the two sections */
+    margin: 20px;
+}
+
+.best-model-summary, 
+.form-container {
+    width: 48%; /* Adjust the width to fit within the container */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    border-radius: 8px;
+    background-color: #000000;
+}
+
+/* Optional styling for a responsive design */
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column;
+    }
+
+    .best-model-summary, 
+    .form-container {
+        width: 100%; /* Full width on smaller screens */
+    }
+}
+
+.processing-message {
+    margin-top: 10px;
+    color: rgb(192, 81, 2); /* Dark Orange */
+    font-weight: bold;
+}

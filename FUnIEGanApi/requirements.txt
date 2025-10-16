@@ -1,0 +1,37 @@
+# Conda-installable packages
+numpy==1.24.4
+psutil==5.9.5
+traitlets==5.10.0
+fastapi==0.88.0
+pydantic==1.10.8
+starlette==0.22.0
+uvicorn==0.19.0
+anyio==3.6.2
+h11==0.13.0
+pandas==2.0.3
+Pillow==10.4.0
+PyYAML==6.0.2
+
+# pip-only installable packages
+torch==2.4.0
+torchvision==0.19.0
+opencv-contrib-python==4.10.0.84
+matplotlib==3.7.5
+python-multipart==0.0.5
+typing_extensions==4.8.0
+exceptiongroup==1.1.1
+annotated-types==0.7.0
+requests==2.31.0
+sniffio==1.2.0
+backcall==0.2.0
+beautifulsoup4==4.12.2
+certifi==2023.7.22
+click==8.0.4
+colorama==0.4.6
+defusedxml==0.7.1
+entrypoints==0.4
+idna==3.4
+ipython-genutils==0.2.0
+pexpect==4.8.0
+pickleshare==0.7.5
+urllib3==1.26.16

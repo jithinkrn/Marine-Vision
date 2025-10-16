@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <title>MarineVision</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+
+        <script>
+            // Function to change the message and disable the submit button
+            function showProcessingMessage() {
+            const uploadButton = document.getElementById('uploadButton');
+            const messageDiv = document.getElementById('processingMessage');
+            const deepSESRSelected = document.getElementById('DeepSESR').checked;
+
+            // Clear previous flash messages
+            const flashMessages = document.querySelectorAll('.flash-messages li.flash-success');
+            flashMessages.forEach(message => message.remove());
+
+            uploadButton.value = "Processing... Please wait";
+            uploadButton.disabled = true; // Disable the button to prevent multiple submissions
+
+            // Check if DeepSESR is selected and display appropriate message
+            if (deepSESRSelected) {
+                messageDiv.innerText = 
+                    "Warning: DeepSESR is computationally expensive and may incur long processing time on local machines.";
+            } else {
+                messageDiv.innerText = 
+                    "This may take a while if you are running the application on a local machine, as the GPU is not utilized. Thank you for your patience.";
+            }
+
+            // Allow form submission
+            return true;
+            }
+        </script>
+
+    </head>
+<body>
+    <h1>Upload Video</h1>
+
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+        <ul class="flash-messages">
+            {% for message in messages %}
+                <li class="flash-success">{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+    {% endwith %}
+
+    <!-- Video Upload Form -->
+    <form method="POST" action="/upload_video" enctype="multipart/form-data" onsubmit="return showProcessingMessage()">
+        <input type="file" name="file" accept="video/*" required><br><br>
+        <h2 style="color: #0632f3;">Please select the models for enhancement</h2>
+        <label for="FunieGan"><input id="FunieGan" type="checkbox" name="model" value="FunieGan"> FunieGan</label><br>
+        <label for="Sea-pixGan"><input id="Sea-pixGan" type="checkbox" name="model" value="Sea-pixGan"> Sea-pixGan</label><br>
+        <label for="LDS-Net"><input id="LDS-Net" type="checkbox" name="model" value="LDS-Net"> LDS-Net</label><br>
+        <label for="DeepSESR"><input id="DeepSESR" type="checkbox" name="model" value="DeepSESR"> DeepSESR</label><br><br>
+
+        <input type="submit" id="uploadButton" value="Upload Video">
+    </form>
+
+    <!-- Placeholder for processing message -->
+    <div id="processingMessage" class="processing-message"></div>
+
+    <div class="input-video">
+        {% if input_video %}
+            <div>
+                <h2>Input Video</h2>
+                <video width="640" height="360" controls>
+                    <source src="{{ url_for('uploaded_video', filename=input_video) }}" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+        {% endif %}
+    </div>
+
+    <div>
+
+    <!-- Display enhanced videos in a 2x2 grid -->
+    <div class="video-grid">
+        {% if ldsnet_result_video %}
+            <div class="video-container {% if best_model == 'LDS-Net' %}best-video{% endif %}">
+                <h2>Enhanced by LDS-Net</h2>
+                <video width="640" height="360" controls>
+                    <source src="{{ url_for('result_video', filename=ldsnet_result_video) }}" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+                <p class="score-annotation">Composite Score: {{ ldsnet_score|default(0)|round(4) }}</p>
+                {% if best_model == 'LDS-Net' %}
+                    <div class="best-video-annotation">Best Video</div>
+                {% endif %}
+            </div>
+        {% endif %}
+        {% if seapixgan_result_video %}
+            <div class="video-container {% if best_model == 'SeaPixGan' %}best-video{% endif %}">
+                <h2>Enhanced by Sea-Pix-GAN</h2>
+                <video width="640" height="360" controls>
+                    <source src="{{ url_for('result_video', filename=seapixgan_result_video) }}" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+                <p class="score-annotation">Composite Score: {{ seapixgan_score|default(0)|round(4) }}</p>
+                {% if best_model == 'SeaPixGan' %}
+                    <div class="best-video-annotation">Best Video</div>
+                {% endif %}
+            </div>
+        {% endif %}
+        {% if funiegan_result_video %}
+            <div class="video-container {% if best_model == 'FUnieGan' %}best-video{% endif %}">
+                <h2>Enhanced by FUnIE-GAN</h2>
+                <video width="640" height="360" controls>
+                    <source src="{{ url_for('result_video', filename=funiegan_result_video) }}" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+                <p class="score-annotation">Composite Score: {{ funiegan_score|default(0)|round(4) }}</p>
+                {% if best_model == 'FUnieGan' %}
+                    <div class="best-video-annotation">Best Video</div>
+                {% endif %}
+            </div>
+        {% endif %}
+        {% if deepsesr_result_video %}
+            <div class="video-container {% if best_model == 'DeepSESR' %}best-video{% endif %}">
+                <h2>Enhanced by Deep SESR</h2>
+                <video width="640" height="360" controls>
+                    <source src="{{ url_for('result_video', filename=deepsesr_result_video) }}" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+                <p class="score-annotation">Composite Score: {{ deepsesr_score|default(0)|round(4) }}</p>
+                {% if best_model == 'DeepSESR' %}
+                    <div class="best-video-annotation">Best Video</div>
+                {% endif %}
+            </div>
+        {% endif %}
+    </div>
+
+    {% if best_model %}
+    <div class="container">
+        <!-- Best Model Summary -->
+        <div class="best-model-summary">
+            <h2>Best Video: Processed by {{ best_model }} (Score: {{ best_score|round(4) }})</h2>
+            <h3>What Does the Lowest Score Mean?</h3>
+            <p>
+                The video with the <strong>lowest composite score</strong> represents the 
+                <em>most relevant and high-quality video</em> among the candidates. A lower score suggests:
+            </p>
+
+            <ul class="score-list">
+                <li>
+                    <strong>Better Temporal Consistency</strong> – 
+                    The video shows smoother and more natural motion patterns between frames.
+                </li>
+                <li>
+                    <strong>Higher Structural Similarity</strong> – 
+                    The video retains essential visual details and structures, closely matching the original input.
+                </li>
+                <li>
+                    <strong>Compact Latent Representations</strong> – 
+                    The model's clustering mechanism confirms that the video content aligns well with learned patterns, indicating consistency and coherence.
+                </li>
+            </ul>
+        </div>
+
+        <!-- Feedback Form -->
+        <div class="form-container">
+            <form method="POST" class="feedback-form" action="/submit_feedback" style="text-align: left;">
+                <h2>Difference of Opinion?</h2>
+                <h3>Tell us which video was the best for future enhancements.</h3>
+                <div>
+                    {% for model, result_video in [('LDS-Net', ldsnet_result_video),
+                                                    ('SeaPixGan', seapixgan_result_video),
+                                                    ('FUnieGan', funiegan_result_video),
+                                                    ('DeepSESR', deepsesr_result_video)] %}
+                        {% if result_video %}
+                            <label>
+                                <input type="radio" name="human_best_video" value="{{ model }}:{{ result_video }}" required>
+                                {{ model }}
+                            </label><br>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+                <br>
+                <input type="hidden" name="ldsnet_score" value="{{ ldsnet_score }}">
+                <input type="hidden" name="seapixgan_score" value="{{ seapixgan_score }}">
+                <input type="hidden" name="funiegan_score" value="{{ funiegan_score }}">
+                <input type="hidden" name="deepsesr_score" value="{{ deepsesr_score }}">
+                <input type="hidden" name="system_best_model" value="{{ best_model }}">
+
+                <input type="submit" value="Submit Feedback">
+            </form>
+        </div>
+    </div>
+    {% endif %}
+
+</body>
+</html>

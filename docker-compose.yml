@@ -1,0 +1,52 @@
+version: '3.8'
+
+services:
+  seapixganapi:
+    build: ./SeapixGanApi
+    container_name: seapixganapi
+    ports:
+      - "8000:8000"
+    networks:
+      - gan_network
+
+  deepseesrapi:
+    build: ./DeepSESRApi
+    container_name: deepseesrapi
+    ports:
+      - "8002:8002"
+    networks:
+      - gan_network
+
+  ldsnetapi:
+    build: ./LDSNetApi
+    container_name: ldsnetapi
+    ports:
+      - "8003:8003"
+    environment:
+      - RUNNING_IN_DOCKER=true
+    networks:
+      - gan_network
+
+  funieganapi:
+    build: ./FUnIEGanApi
+    container_name: funieganapi
+    ports:
+      - "8001:8001"
+    networks:
+      - gan_network
+
+  marinevisionwebapp:
+    build: ./MarineVisionWebApp
+    container_name: marinevisionwebapp
+    ports:
+      - "5001:5001"
+    networks:
+      - gan_network
+    environment:
+      - FLASK_APP=app
+      - FLASK_RUN_HOST=0.0.0.0
+      - FLASK_RUN_PORT=5001
+
+networks:
+  gan_network:
+    driver: bridge
